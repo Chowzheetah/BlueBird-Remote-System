@@ -1,10 +1,10 @@
 #include <AltSoftSerial.h> //https://github.com/PaulStoffregen/AltSoftSerial or add from Libary
 #include <ServoTimer2.h> //
 
-const int chDownButton=A4;
-const int chUpButton=A5;
-int readA4; //will be connected to variable resitor bridge and momentary
-int readA5; //will be connected to variable resitor bridge and momentary
+const int chDownButton=A6;
+const int chUpButton=A7;
+int readA6; //will be connected to variable resitor bridge and momentary
+int readA7; //will be connected to variable resitor bridge and momentary
 unsigned long chButtTime; //Channel Press Time
 int chA4State; //saves previous state
 int chA5State; //saves previous state
@@ -131,24 +131,24 @@ void setup() {
 
 void loop() {
 
-  readA4 = analogRead(chDownButton);
-  readA5 = analogRead(chUpButton);
+  readA6 = analogRead(chDownButton);
+  readA7 = analogRead(chUpButton);
 
-  if (readA4==1023 && chA4State!=readA4 && (millis()-chButtTime)>50){
+  if (readA6==1023 && chA4State!=readA6 && (millis()-chButtTime)>50){
       chButtTime = millis();
       checkChannel();
       channel=channel-1;
       setChannel();
     }
-    chA4State=readA4;
+    chA4State=readA6;
 
-  if (readA5==1023 && chA5State!=readA5 && (millis()-chButtTime)>50){
+  if (readA7==1023 && chA5State!=readA7 && (millis()-chButtTime)>50){
       chButtTime = millis();
       checkChannel();
       channel=channel+1;
       setChannel();
     }
-    chA5State=readA5;
+    chA5State=readA7;
 
   ChannelLED();
 
@@ -243,11 +243,12 @@ if (checkSum == checkSumIncome){
    analogWrite(motorPWMPin,motorPWM);
 
     
-  //  Serial.print(joyY);
+  //Serial.print(joyY);
   //  Serial.print("  ");
   //  Serial.println(motorPWM);
 
-  steeringAngle = 2000-map(joyX,0,1023,853,171) + (50-map(readA4,0,512,0,200));
+  steeringAngle = 2000-map(joyX,0,1023,171,853) + (50-map(readA6,0,512,0,200)); //+ map(readA6,340,683,-30,30); //340 to 680 = 1023/3 to 1023*2/3. 10k variable resistor between resistor two 10k resistors
+  //Serial.println(readA6);
   //Serial.println(steeringAngle);
   steeringServo.write(steeringAngle);
 

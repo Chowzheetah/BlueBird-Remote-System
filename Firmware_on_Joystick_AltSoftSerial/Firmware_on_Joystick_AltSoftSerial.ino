@@ -14,13 +14,13 @@ const int channelSelectLED[6]={2,4,7,12,A4,A5}; // Pins Selected for Channel Dis
 
 const int joyX=A0; //X Axis
 const int joyY=A1; //Y Axis
-const int chDownButton=A4; //Switch with Channel Select LED 2^5
-const int chUpButton=A5; //Switch with Channel Select LED 2^6
+const int chDownButton=A6; //Switch with Channel Select LED 2^5
+const int chUpButton=A7; //Switch with Channel Select LED 2^6
 
 int joystickX;
 int joystickY;
-int readA4; //will be connected to variable resitor bridge and momentary
-int readA5; //will be connected to variable resitor bridge and momentary
+int readA6; //will be connected to variable resitor bridge and momentary
+int readA7; //will be connected to variable resitor bridge and momentary
 int ioValue[7]={0};
 int checkSum = 0;
 
@@ -124,30 +124,30 @@ void loop() {
   joystickY=analogRead(joyY);
     checkSum=checkSum + joystickY;
 
-  readA4 = analogRead(chDownButton);
-    checkSum=checkSum + readA4;
-  readA5 = analogRead(chUpButton);
-    checkSum=checkSum + readA5;
+  readA6 = analogRead(chDownButton);
+    checkSum=checkSum + readA6;
+  readA7 = analogRead(chUpButton);
+    checkSum=checkSum + readA7;
 
-  if (readA4==1023 && chA4State!=readA4 && (millis()-chButtTime)>50){
+  if (readA6==1023 && chA4State!=readA6 && (millis()-chButtTime)>50){
       chButtTime = millis();
       checkChannel();
       channel=channel-1;
       setChannel();
     }
-    chA4State=readA4;
+    chA4State=readA6;
 
-  if (readA5==1023 && chA5State!=readA5 && (millis()-chButtTime)>50){
+  if (readA7==1023 && chA5State!=readA7 && (millis()-chButtTime)>50){
       chButtTime = millis();
       checkChannel();
       channel=channel+1;
       setChannel();
     }
-    chA5State=readA5;
+    chA5State=readA7;
 
   ChannelLED();
 
-//joyX,joyY,RL,RR,A,B,C,D,readA4,readA5
+//joyX,joyY,RL,RR,A,B,C,D,readA6,readA7
 
 for(int j=0;j<7;j++){
   ioValue[j]=digitalRead(buttons[j]);
@@ -156,7 +156,7 @@ for(int j=0;j<7;j++){
 
 checkSum=checkSum % 10; //takes last modulus
 //delay(5000);
-sprintf(joyOutput,"#%04d%04d%01d%01d%01d%01d%01d%01d%01d%04d%04d%01d$\n",joystickX,joystickY,ioValue[0],ioValue[1],ioValue[2],ioValue[3],ioValue[4],ioValue[5],ioValue[6],readA5,readA4,checkSum);
+sprintf(joyOutput,"#%04d%04d%01d%01d%01d%01d%01d%01d%01d%04d%04d%01d$\n",joystickX,joystickY,ioValue[0],ioValue[1],ioValue[2],ioValue[3],ioValue[4],ioValue[5],ioValue[6],readA7,readA6,checkSum);
 HC12.write(joyOutput);
 //Serial.print(joyOutput);
 
